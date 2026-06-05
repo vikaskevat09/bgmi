@@ -113,3 +113,9 @@
 /* Admin inputs use dark text on the light dashboard */
 .admin-body input, .admin-body textarea, .admin-body select { color: #1d1d1f; background-color: #ffffff; }
 .admin-body input::placeholder, .admin-body textarea::placeholder { color: #9aa1ad; }
+
+/* Site logo preview */
+.brand-preview { display: grid; place-items: center; min-height: 120px; border: 1px dashed var(--line);
+  border-radius: 12px; background: #141414; padding: 1.2rem; }
+.brand-preview img { max-height: 90px; max-width: 100%; object-fit: contain; }
+.brand-none { color: var(--muted); font-size: .9rem; }

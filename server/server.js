@@ -19,6 +19,7 @@ import fs from 'fs';
 import { priceCart, VERIFY_SLUGS, VERIFY_NEEDS_SERVER } from './catalog.js';
 import * as store from './store.js';
 import * as admin from './adminconfig.js';
+import { cloudEnabled, uploadImage, destroyImage } from './cloud.js';
 import {
   hashPassword, verifyPassword, createSessionToken, verifySessionToken,
   setSessionCookie, clearSessionCookie, parseCookies, SESSION_COOKIE, sessionCookieAttrs,
@@ -142,8 +143,8 @@ app.delete('/api/admin/prices/:sku', requireAdmin, (req, res) => {
 /* ---- Admin: hero (uploaded images) ---- */
 app.get('/api/admin/hero', requireAdmin, (_req, res) => res.json({ hero: admin.getHero() }));
 
-/* Upload a hero image (base64 data URL) → saved to assets/hero/<id>.<ext>. */
-app.post('/api/admin/hero', requireAdmin, (req, res) => {
+/* Upload a hero image (base64) → Cloudinary if configured, else local. */
+app.post('/api/admin/hero', requireAdmin, async (req, res) => {
   try {
     const { dataUrl } = req.body || {};
     const m = /^data:image\/(png|jpe?g|webp);base64,(.+)$/i.exec(dataUrl || '');
@@ -152,27 +153,31 @@ app.post('/api/admin/hero', requireAdmin, (req, res) => {
     const buf = Buffer.from(m[2], 'base64');
     if (buf.length > 6 * 1024 * 1024) return res.status(400).json({ message: 'Image too large (max 6MB).' });
 
-    const dir = path.join(ROOT, 'assets', 'hero');
-    fs.mkdirSync(dir, { recursive: true });
     const id = 'h_' + Date.now().toString(36);
-    const filename = `${id}.${ext}`;
-    fs.writeFileSync(path.join(dir, filename), buf);
-    // store with explicit id so file + record stay in sync
-    const slide = { id, image: `assets/hero/${filename}` };
+    let image;
+    if (cloudEnabled()) {
+      image = await uploadImage(dataUrl, `topupworld/hero/${id}`);
+    } else {
+      const dir = path.join(ROOT, 'assets', 'hero');
+      fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(path.join(dir, `${id}.${ext}`), buf);
+      image = `assets/hero/${id}.${ext}`;
+    }
+    const slide = { id, image };
     admin.getConfig().hero.push(slide);
     admin.reorderHero(admin.getConfig().hero.map(h => h.id)); // triggers save
     res.json({ hero: admin.getHero(), added: slide });
   } catch (e) {
     console.error('hero upload error:', e);
-    res.status(500).json({ message: 'Upload failed.' });
+    res.status(500).json({ message: e.message || 'Upload failed.' });
   }
 });
 
-app.delete('/api/admin/hero/:id', requireAdmin, (req, res) => {
+app.delete('/api/admin/hero/:id', requireAdmin, async (req, res) => {
   const slide = admin.getHeroSlide(req.params.id);
   if (slide && slide.image) {
-    const p = path.join(ROOT, slide.image);
-    if (fs.existsSync(p)) { try { fs.unlinkSync(p); } catch {} }
+    if (/^https?:\/\//i.test(slide.image)) { await destroyImage(`topupworld/hero/${slide.id}`); }
+    else { const p = path.join(ROOT, slide.image); if (fs.existsSync(p)) { try { fs.unlinkSync(p); } catch {} } }
   }
   res.json({ hero: admin.removeHero(req.params.id) });
 });
@@ -187,20 +192,24 @@ app.post('/api/admin/socials', requireAdmin, (req, res) => {
 });
 
 /* ---- Admin: logo upload / remove ----
- * Accepts a base64 data URL and writes it into assets/games/<gameId>.<ext>. */
-app.post('/api/admin/logo/:gameId', requireAdmin, (req, res) => {
+ * Cloudinary (if configured) keeps it permanent; else local file (dev). */
+app.post('/api/admin/logo/:gameId', requireAdmin, async (req, res) => {
   try {
     const gameId = String(req.params.gameId).replace(/[^a-z0-9-]/gi, '');
     const { dataUrl } = req.body || {};
     const m = /^data:image\/(png|jpe?g|webp);base64,(.+)$/i.exec(dataUrl || '');
     if (!gameId || !m) return res.status(400).json({ message: 'Provide a PNG/JPG/WEBP image.' });
-    let ext = m[1].toLowerCase(); if (ext === 'jpeg') ext = 'jpg';
     const buf = Buffer.from(m[2], 'base64');
     if (buf.length > 5 * 1024 * 1024) return res.status(400).json({ message: 'Image too large (max 5MB).' });
 
+    if (cloudEnabled()) {
+      const url = await uploadImage(dataUrl, `topupworld/games/${gameId}`);
+      admin.setLogo(gameId, url);
+      return res.json({ ok: true, file: url });
+    }
+    let ext = m[1].toLowerCase(); if (ext === 'jpeg') ext = 'jpg';
     const dir = path.join(ROOT, 'assets', 'games');
     fs.mkdirSync(dir, { recursive: true });
-    // Remove any previous logo files for this game (other extensions) to avoid stale picks.
     for (const e of ['png', 'jpg', 'webp']) {
       const p = path.join(dir, `${gameId}.${e}`);
       if (e !== ext && fs.existsSync(p)) { try { fs.unlinkSync(p); } catch {} }
@@ -210,12 +219,13 @@ app.post('/api/admin/logo/:gameId', requireAdmin, (req, res) => {
     res.json({ ok: true, file: `${gameId}.${ext}` });
   } catch (e) {
     console.error('logo upload error:', e);
-    res.status(500).json({ message: 'Upload failed.' });
+    res.status(500).json({ message: e.message || 'Upload failed.' });
   }
 });
 
-app.delete('/api/admin/logo/:gameId', requireAdmin, (req, res) => {
+app.delete('/api/admin/logo/:gameId', requireAdmin, async (req, res) => {
   const gameId = String(req.params.gameId).replace(/[^a-z0-9-]/gi, '');
+  if (cloudEnabled()) { await destroyImage(`topupworld/games/${gameId}`); }
   const dir = path.join(ROOT, 'assets', 'games');
   for (const e of ['png', 'jpg', 'webp']) {
     const p = path.join(dir, `${gameId}.${e}`);
@@ -227,16 +237,21 @@ app.delete('/api/admin/logo/:gameId', requireAdmin, (req, res) => {
 
 /* ---- Admin: currency icon upload / remove (per game) ----
  * Small PNG/WEBP shown next to the currency amount in cart/checkout. */
-app.post('/api/admin/currency/:gameId', requireAdmin, (req, res) => {
+app.post('/api/admin/currency/:gameId', requireAdmin, async (req, res) => {
   try {
     const gameId = String(req.params.gameId).replace(/[^a-z0-9-]/gi, '');
     const { dataUrl } = req.body || {};
     const m = /^data:image\/(png|webp|jpe?g);base64,(.+)$/i.exec(dataUrl || '');
     if (!gameId || !m) return res.status(400).json({ message: 'Provide a PNG/WEBP image.' });
-    let ext = m[1].toLowerCase(); if (ext === 'jpeg') ext = 'jpg';
     const buf = Buffer.from(m[2], 'base64');
     if (buf.length > 2 * 1024 * 1024) return res.status(400).json({ message: 'Icon too large (max 2MB).' });
 
+    if (cloudEnabled()) {
+      const url = await uploadImage(dataUrl, `topupworld/currency/${gameId}`);
+      admin.setCurrencyIcon(gameId, url);
+      return res.json({ ok: true, file: url });
+    }
+    let ext = m[1].toLowerCase(); if (ext === 'jpeg') ext = 'jpg';
     const dir = path.join(ROOT, 'assets', 'currency');
     fs.mkdirSync(dir, { recursive: true });
     for (const e of ['png', 'jpg', 'webp']) {
@@ -248,18 +263,61 @@ app.post('/api/admin/currency/:gameId', requireAdmin, (req, res) => {
     res.json({ ok: true, file: `assets/currency/${gameId}.${ext}` });
   } catch (e) {
     console.error('currency upload error:', e);
-    res.status(500).json({ message: 'Upload failed.' });
+    res.status(500).json({ message: e.message || 'Upload failed.' });
   }
 });
 
-app.delete('/api/admin/currency/:gameId', requireAdmin, (req, res) => {
+app.delete('/api/admin/currency/:gameId', requireAdmin, async (req, res) => {
   const gameId = String(req.params.gameId).replace(/[^a-z0-9-]/gi, '');
+  if (cloudEnabled()) { await destroyImage(`topupworld/currency/${gameId}`); }
   const dir = path.join(ROOT, 'assets', 'currency');
   for (const e of ['png', 'jpg', 'webp']) {
     const p = path.join(dir, `${gameId}.${e}`);
     if (fs.existsSync(p)) { try { fs.unlinkSync(p); } catch {} }
   }
   admin.clearCurrencyIcon(gameId);
+  res.json({ ok: true });
+});
+
+/* ---- Admin: site (brand) logo upload / remove ---- */
+app.post('/api/admin/site-logo', requireAdmin, async (req, res) => {
+  try {
+    const { dataUrl } = req.body || {};
+    const m = /^data:image\/(png|webp|jpe?g|svg\+xml);base64,(.+)$/i.exec(dataUrl || '');
+    if (!m) return res.status(400).json({ message: 'Provide a PNG/WEBP/SVG image.' });
+    let ext = m[1].toLowerCase(); if (ext === 'jpeg') ext = 'jpg'; if (ext === 'svg+xml') ext = 'svg';
+    const buf = Buffer.from(m[2], 'base64');
+    if (buf.length > 2 * 1024 * 1024) return res.status(400).json({ message: 'Logo too large (max 2MB).' });
+
+    if (cloudEnabled()) {
+      const url = await uploadImage(dataUrl, 'topupworld/brand/logo');
+      admin.setSiteLogo(url);
+      return res.json({ ok: true, file: url });
+    }
+    const dir = path.join(ROOT, 'assets', 'brand');
+    fs.mkdirSync(dir, { recursive: true });
+    for (const e of ['png', 'jpg', 'webp', 'svg']) {
+      const p = path.join(dir, `logo.${e}`);
+      if (e !== ext && fs.existsSync(p)) { try { fs.unlinkSync(p); } catch {} }
+    }
+    const filename = `assets/brand/logo.${ext}?v=${Date.now()}`;
+    fs.writeFileSync(path.join(dir, `logo.${ext}`), buf);
+    admin.setSiteLogo(filename);
+    res.json({ ok: true, file: filename });
+  } catch (e) {
+    console.error('site-logo upload error:', e);
+    res.status(500).json({ message: e.message || 'Upload failed.' });
+  }
+});
+
+app.delete('/api/admin/site-logo', requireAdmin, async (req, res) => {
+  if (cloudEnabled()) { await destroyImage('topupworld/brand/logo'); }
+  const dir = path.join(ROOT, 'assets', 'brand');
+  for (const e of ['png', 'jpg', 'webp', 'svg']) {
+    const p = path.join(dir, `logo.${e}`);
+    if (fs.existsSync(p)) { try { fs.unlinkSync(p); } catch {} }
+  }
+  admin.clearSiteLogo();
   res.json({ ok: true });
 });
 

@@ -18,11 +18,11 @@ const DATA_DIR = path.join(__dirname, 'data');
 const FILE = path.join(DATA_DIR, 'config.json');
 fs.mkdirSync(DATA_DIR, { recursive: true });
 
-let cfg = { priceOverrides: {}, labelOverrides: {}, hero: [], logos: {}, socials: {}, currencyIcons: {} };
+let cfg = { priceOverrides: {}, labelOverrides: {}, hero: [], logos: {}, socials: {}, currencyIcons: {}, siteLogo: '' };
 try {
   if (fs.existsSync(FILE)) {
     const loaded = JSON.parse(fs.readFileSync(FILE, 'utf8'));
-    cfg = { priceOverrides: {}, labelOverrides: {}, hero: [], logos: {}, socials: {}, currencyIcons: {}, ...loaded };
+    cfg = { priceOverrides: {}, labelOverrides: {}, hero: [], logos: {}, socials: {}, currencyIcons: {}, siteLogo: '', ...loaded };
     if (!Array.isArray(cfg.hero)) cfg.hero = [];
     // Drop any legacy text-based hero slides (keep only image slides).
     cfg.hero = cfg.hero.filter(h => h && h.image);
@@ -44,8 +44,12 @@ function save() {
 export function getConfig() { return cfg; }
 export function publicConfig() {
   return { hero: cfg.hero, priceOverrides: cfg.priceOverrides, labelOverrides: cfg.labelOverrides,
-    logos: cfg.logos, socials: cfg.socials, currencyIcons: cfg.currencyIcons };
+    logos: cfg.logos, socials: cfg.socials, currencyIcons: cfg.currencyIcons, siteLogo: cfg.siteLogo };
 }
+
+/* Site logo (brand logo in header/footer) */
+export function setSiteLogo(filename) { cfg.siteLogo = filename; save(); return cfg.siteLogo; }
+export function clearSiteLogo() { cfg.siteLogo = ''; save(); return cfg.siteLogo; }
 
 /* Currency icons (keyed by game id) */
 export function setCurrencyIcon(gameId, filename) { cfg.currencyIcons[gameId] = filename; save(); return cfg.currencyIcons; }

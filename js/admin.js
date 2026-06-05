@@ -65,10 +65,11 @@
     t.addEventListener('click', () => switchView(t.dataset.view)));
   function switchView(view) {
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('is-active', t.dataset.view === view));
-    $('adminViewTitle').textContent = { prices: 'Prices', logos: 'Game Logos', hero: 'Hero Banners', socials: 'Social Links' }[view];
+    $('adminViewTitle').textContent = { prices: 'Prices', logos: 'Game Logos', hero: 'Hero Banners', brand: 'Site Logo', socials: 'Social Links' }[view];
     if (view === 'prices') renderPrices();
     else if (view === 'logos') renderLogos();
     else if (view === 'hero') renderHero();
+    else if (view === 'brand') renderBrand();
     else if (view === 'socials') renderSocials();
   }
 
@@ -305,6 +306,47 @@
       try { await api('POST', '/api/admin/socials', { socials: map }); saved('✓ Social links saved'); }
       catch (e) { window.toast('⚠️ ' + e.message, 'err'); }
     });
+  }
+
+  /* ---------- SITE (BRAND) LOGO ---------- */
+  async function renderBrand() {
+    const view = $('adminView');
+    let siteLogo = '';
+    try { siteLogo = (await api('GET', '/api/config')).siteLogo || ''; } catch {}
+    view.innerHTML = `
+      <div class="admin-card">
+        <h3>Website logo</h3>
+        <p class="admin-hint">Upload your brand logo (PNG/WEBP/SVG, transparent background works best, max 2MB). It replaces the default mark in the header and footer across the site. Recommended height ~80px (wide logo e.g. 240×80).</p>
+        <div class="brand-preview" id="brandPreview">
+          ${siteLogo
+            ? `<img src="${assetUrl(siteLogo)}" alt="Current logo" />`
+            : '<span class="brand-none">No custom logo — using the default mark.</span>'}
+        </div>
+        <div class="logo-actions" style="margin-top:1rem">
+          <button class="btn btn-primary" id="brandUpload">Upload logo</button>
+          ${siteLogo ? '<button class="btn btn-ghost" id="brandRemove">Remove logo</button>' : ''}
+        </div>
+        <input type="file" id="brandFile" accept="image/png,image/webp,image/svg+xml,image/jpeg" style="display:none" />
+      </div>`;
+
+    const fileInput = $('brandFile');
+    $('brandUpload').addEventListener('click', () => { fileInput.value = ''; fileInput.click(); });
+    const rm = $('brandRemove');
+    if (rm) rm.addEventListener('click', async () => {
+      try { await api('DELETE', '/api/admin/site-logo'); saved('✓ Logo removed'); renderBrand(); }
+      catch (e) { window.toast('⚠️ ' + e.message, 'err'); }
+    });
+    fileInput.onchange = () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      if (file.size > 2 * 1024 * 1024) { window.toast('⚠️ Logo too large (max 2MB).', 'err'); return; }
+      const reader = new FileReader();
+      reader.onload = async () => {
+        try { await api('POST', '/api/admin/site-logo', { dataUrl: reader.result }); saved('✓ Logo uploaded'); renderBrand(); }
+        catch (e) { window.toast('⚠️ ' + e.message, 'err'); }
+      };
+      reader.readAsDataURL(file);
+    };
   }
 
   /* ---------- boot ---------- */

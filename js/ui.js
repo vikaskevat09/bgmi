@@ -85,7 +85,7 @@
     .then(c => {
       window.SiteConfig = { hero: c.hero || null, priceOverrides: c.priceOverrides || {},
         labelOverrides: c.labelOverrides || {}, logos: c.logos || {}, socials: c.socials || {},
-        currencyIcons: c.currencyIcons || {} };
+        currencyIcons: c.currencyIcons || {}, siteLogo: c.siteLogo || '' };
       // Apply price + label overrides onto the catalog so all pages reflect admin edits.
       if (window.CATALOG) {
         for (const g of window.CATALOG.games) {
@@ -101,9 +101,21 @@
       }
       document.dispatchEvent(new CustomEvent('config:ready', { detail: window.SiteConfig }));
       renderFooterSocials();
+      renderSiteLogo();
       return window.SiteConfig;
     })
     .catch(() => window.SiteConfig);
+
+  // If the admin uploaded a brand logo, show it in the header (and footer) in
+  // place of the default SVG mark.
+  function renderSiteLogo() {
+    const logo = window.SiteConfig && window.SiteConfig.siteLogo;
+    if (!logo) return;
+    const url = window.assetUrl ? window.assetUrl(logo) : logo;
+    document.querySelectorAll('.brand .brand-mark').forEach(mark => {
+      mark.innerHTML = `<img src="${url}" alt="logo" style="height:34px;width:auto;display:block;border-radius:8px" />`;
+    });
+  }
 
   // Render footer social icons from config (admin-controlled links).
   function renderFooterSocials() {
