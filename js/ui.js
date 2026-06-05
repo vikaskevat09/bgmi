@@ -113,7 +113,7 @@
     if (!logo) return;
     const url = window.assetUrl ? window.assetUrl(logo) : logo;
     document.querySelectorAll('.brand .brand-mark').forEach(mark => {
-      mark.innerHTML = `<img src="${url}" alt="logo" style="height:34px;width:auto;display:block;border-radius:8px" />`;
+      mark.innerHTML = `<img src="${url}" alt="logo" />`;
     });
   }
 

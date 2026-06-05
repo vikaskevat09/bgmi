@@ -78,11 +78,12 @@ input::placeholder, textarea::placeholder { color: var(--muted-2); }
 .site-header { position: sticky; top: 0; z-index: 50; background: rgba(10,10,10,.85);
   backdrop-filter: saturate(180%) blur(12px); border-bottom: 1px solid var(--line); transition: box-shadow .2s; }
 .site-header.scrolled { box-shadow: 0 6px 24px rgba(0,0,0,.5); }
-.header-inner { display: flex; align-items: center; gap: 1.5rem; height: 76px; }
-.brand { display: flex; align-items: center; gap: .55rem; font-weight: 900; flex-shrink: 0; }
-.brand-mark svg { transition: transform .3s; }
-.brand:hover .brand-mark svg { transform: rotate(-8deg) scale(1.06); }
-.brand-name { font-size: 1.32rem; letter-spacing: -.5px; }
+.header-inner { display: flex; align-items: center; gap: 1.5rem; height: 84px; }
+.brand { display: flex; align-items: center; gap: .6rem; font-weight: 900; flex-shrink: 0; }
+.brand-mark svg, .brand-mark img { height: 52px; width: auto; display: block; transition: transform .3s; }
+.brand-mark img { border-radius: 10px; }
+.brand:hover .brand-mark svg, .brand:hover .brand-mark img { transform: rotate(-6deg) scale(1.06); }
+.brand-name { font-size: 1.5rem; letter-spacing: -.5px; }
 .brand-name span { color: var(--orange); }
 
 /* primary nav links inside the main header row */
@@ -193,7 +194,7 @@ input::placeholder, textarea::placeholder { color: var(--muted-2); }
 .games-grid { display: flex; gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory;
   padding: .3rem .2rem 1rem; scrollbar-width: none; }
 .games-grid::-webkit-scrollbar { display: none; }
-.game-card { flex: 0 0 232px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
+.game-card { flex: 0 0 280px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); overflow: hidden; transition: .22s ease; box-shadow: var(--shadow-sm); }
 .game-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: #ffae6b; }
 .game-thumb { aspect-ratio: 3/4; position: relative; overflow: hidden; background: var(--bg-soft); }
@@ -533,7 +534,7 @@ input::placeholder, textarea::placeholder { color: var(--muted-2); }
 .trending-rail { display: flex; gap: 1.1rem; overflow-x: auto; padding-bottom: .5rem; scroll-snap-type: x mandatory;
   scrollbar-width: none; -ms-overflow-style: none; }
 .trending-rail::-webkit-scrollbar { display: none; height: 0; }
-.trend-card { flex: 0 0 200px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
+.trend-card { flex: 0 0 250px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); overflow: hidden; position: relative; transition: .2s; box-shadow: var(--shadow-sm); }
 .trend-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: #ffd2ad; }
 .trend-rank { position: absolute; top: .5rem; left: .5rem; z-index: 2; background: var(--black); color: #fff;
