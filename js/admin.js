@@ -5,6 +5,19 @@
   const $ = id => document.getElementById(id);
   const assetUrl = p => (p && API && !/^https?:\/\//i.test(p)) ? API.replace(/\/$/, '') + '/' + String(p).replace(/^\//, '') : p;
 
+  // Self-contained toast (admin page doesn't load ui.js).
+  if (typeof window.toast !== 'function') {
+    let _tt;
+    window.toast = function (msg, type) {
+      let t = document.getElementById('toast');
+      if (!t) { t = document.createElement('div'); t.id = 'toast'; t.className = 'toast'; document.body.appendChild(t); }
+      t.textContent = msg;
+      t.className = 'toast show' + (type ? ' toast-' + type : '');
+      clearTimeout(_tt); _tt = setTimeout(() => t.classList.remove('show'), 3200);
+    };
+  }
+  window.inr = window.inr || (n => '₹' + Number(n).toLocaleString('en-IN'));
+
   /* ---------- helpers ---------- */
   async function api(method, path, body) {
     const opt = { method, credentials: 'include', headers: {} };

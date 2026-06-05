@@ -1,13 +1,13 @@
 /* ============================================================
    FRONTEND → BACKEND connection
    ------------------------------------------------------------
-   After you deploy the backend (server/) to Render, paste its
-   public URL below. Example:
-       window.TUZ_API_BASE = "https://topupworld-api.onrender.com";
-
-   Leave it as "" only when the frontend and backend are served
-   from the SAME origin (e.g. local dev via the Node server).
-
-   IMPORTANT: no trailing slash. No quotes issues. Just the URL.
+   Auto-detects where it's running:
+   - On localhost  → "" (same-origin local Node server)
+   - Anywhere else → the production backend URL below
+   So you never need to switch this by hand.
    ============================================================ */
-window.TUZ_API_BASE = "";
+(function () {
+  var host = location.hostname;
+  var isLocal = host === 'localhost' || host === '127.0.0.1' || host === '';
+  window.TUZ_API_BASE = isLocal ? '' : 'https://topupworld.shop';
+})();
