@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TopUpWorld — Top Up Games Instantly</title>
+  <meta name="description" content="Fast, secure game top-ups. Diamonds, UC and in-game currency delivered instantly with Player ID only." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="home-page">
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <span class="topbar-left">⚡ Instant delivery on 50+ games • Trusted by 2M+ gamers</span>
+      <div class="topbar-right">
+        <a href="#">Track order</a><span class="dot">•</span><a href="#">Help center</a><span class="dot">•</span><a href="#">EN / ₹ INR</a>
+      </div>
+    </div>
+  </div>
+
+  <header class="site-header" id="siteHeader">
+    <div class="container header-inner">
+      <a href="index.html" class="brand" aria-label="TopUpWorld home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" width="38" height="38" fill="none">
+            <defs>
+              <linearGradient id="lg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+                <stop stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff5a00"/>
+              </linearGradient>
+            </defs>
+            <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#lg)"/>
+            <rect x="1" y="1" width="38" height="38" rx="11" stroke="#ffffff" stroke-opacity=".18" stroke-width="1.5"/>
+            <path d="M22.5 8 12 22.5h6.4L16 32l11.2-15.4H20L22.5 8z" fill="#fff"/>
+          </svg>
+        </span>
+        <span class="brand-name">TopUp<span>World</span></span>
+      </a>
+
+      <nav class="header-nav">
+        <a href="index.html" class="active">Home</a>
+        <a href="#games">Games</a>
+        <a href="#vouchers">Vouchers</a>
+        <a href="#how">How it works</a>
+      </nav>
+
+      <div class="header-search">
+        <input type="text" id="headerSearch" placeholder="Search games, vouchers..." autocomplete="off" />
+        <button aria-label="Search">
+          <svg viewBox="0 0 20 20" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="9" cy="9" r="6"/><path d="m18 18-4.5-4.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <div class="search-results" id="searchResults"></div>
+      </div>
+
+      <div class="header-actions">
+        <button class="btn btn-ghost" type="button" id="signInBtn">Sign in</button>
+        <a class="cart-link" href="cart.html" aria-label="Cart">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/>
+            <path d="M2 3h2.2l2.1 12.3a1.6 1.6 0 0 0 1.6 1.3h9.1a1.6 1.6 0 0 0 1.6-1.3L21 7H5.2"/>
+          </svg>
+          <span class="cart-count" id="cartCount">0</span>
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
+      </div>
+    </div>
+    <nav class="subnav">
+      <div class="container subnav-inner" id="mainNav">
+        <a href="#games" class="active">All Games</a>
+        <a href="#trending">Trending</a>
+        <a href="#vouchers">Vouchers</a>
+        <a href="#how">How it works</a>
+        <a href="#reviews">Reviews</a>
+        <a href="#faq">FAQ</a>
+        <a href="#support">Support</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ===== Full-width hero (rendered from config by js/home.js) ===== -->
+  <section class="hero-full" id="heroSlider" aria-label="Featured">
+    <div class="hero-loading" id="heroLoading"></div>
+    <div class="hero-dots" id="heroDots"></div>
+  </section>
+
+  <!-- ===== Exclusive offers ===== -->
+  <section class="section" id="offers">
+    <div class="container">
+      <div class="section-head"><div><h2>Exclusive offers</h2><p>Limited-time deals — save big on these top-ups.</p></div></div>
+      <div class="offers-grid" id="offersGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===== Trending ===== -->
+  <section class="section" id="trending">
+    <div class="container">
+      <div class="section-head"><div><h2>Trending now</h2><p>Most-loved top-ups this week.</p></div></div>
+      <div class="games-carousel">
+        <button class="rail-nav rail-prev" id="trendPrev" aria-label="Scroll left">‹</button>
+        <div class="trending-rail" id="trendingRail"></div>
+        <button class="rail-nav rail-next" id="trendNext" aria-label="Scroll right">›</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Games ===== -->
+  <section class="section section-soft" id="games">
+    <div class="container">
+      <div class="section-head">
+        <div><h2>Top up games</h2><p>Pick a title to start your recharge.</p></div>
+        <div class="cat-filters" id="catFilters"></div>
+      </div>
+      <div class="games-carousel">
+        <button class="rail-nav rail-prev" id="gamesPrev" aria-label="Scroll left">‹</button>
+        <div class="games-grid" id="gamesGrid"></div>
+        <button class="rail-nav rail-next" id="gamesNext" aria-label="Scroll right">›</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Vouchers ===== -->
+  <section class="section section-dark" id="vouchers">
+    <div class="container">
+      <div class="section-head"><div><h2>Vouchers &amp; gift cards</h2><p>Prepaid credit you can redeem anytime.</p></div></div>
+      <div class="vouchers-grid" id="vouchersGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===== How it works ===== -->
+  <section class="section" id="how">
+    <div class="container">
+      <div class="section-head center"><div><h2>How it works</h2><p>Three simple steps to recharge.</p></div></div>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><h3>Select your game</h3><p>Choose from 50+ supported titles and pick your pack.</p></div>
+        <div class="step"><div class="step-num">2</div><h3>Enter Player ID</h3><p>Only your in-game ID — we verify it before you pay.</p></div>
+        <div class="step"><div class="step-num">3</div><h3>Pay &amp; receive</h3><p>Pay securely and currency lands in your account instantly.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Why us ===== -->
+  <section class="section section-soft" id="why">
+    <div class="container">
+      <div class="section-head center"><div><h2>Why TopUpWorld</h2><p>Built for gamers who want it quick and safe.</p></div></div>
+      <div class="features">
+        <div class="feature"><div class="feature-ic" data-ic="bolt"></div><h3>Instant delivery</h3><p>Most orders complete within seconds.</p></div>
+        <div class="feature"><div class="feature-ic" data-ic="shield"></div><h3>Secure checkout</h3><p>Payments processed via Cashfree. We never see your card.</p></div>
+        <div class="feature"><div class="feature-ic" data-ic="card"></div><h3>Flexible payments</h3><p>UPI, cards, wallets and net banking.</p></div>
+        <div class="feature"><div class="feature-ic" data-ic="support"></div><h3>24/7 support</h3><p>Real humans, always ready to help.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Reviews ===== -->
+  <section class="section" id="reviews">
+    <div class="container">
+      <div class="section-head center"><div><h2>Loved by gamers</h2><p>Over 2 million orders and counting.</p></div></div>
+      <div class="reviews-grid" id="reviewsGrid"></div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="section section-soft" id="faq">
+    <div class="container faq-wrap">
+      <div class="section-head center"><div><h2>Frequently asked questions</h2><p>Everything you need to know.</p></div></div>
+      <div class="faq-list" id="faqList"></div>
+    </div>
+  </section>
+
+  <!-- ===== Support CTA ===== -->
+  <section class="section" id="support">
+    <div class="container cta-band">
+      <div><h2>Need a hand?</h2><p>Our team is online around the clock to sort out any order.</p></div>
+      <button class="btn btn-primary btn-lg" type="button">Contact support</button>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <span class="brand-name">TopUp<span>World</span></span>
+        <p>Fast and secure game top-ups. All game names, currencies and trademarks are the property of their respective publishers. Logos are used by licensed partners only.</p>
+        <div class="socials">
+          <a href="#" aria-label="Facebook" data-soc="fb"></a>
+          <a href="#" aria-label="Instagram" data-soc="ig"></a>
+          <a href="#" aria-label="X" data-soc="x"></a>
+          <a href="#" aria-label="YouTube" data-soc="yt"></a>
+        </div>
+      </div>
+      <div class="footer-cols">
+        <div><h4>Company</h4><a href="about.html">About us</a><a href="about.html#copyright">Copyright</a></div>
+        <div><h4>Help</h4><a href="index.html#faq">FAQ</a><a href="refund.html">Refunds</a><a href="index.html#support">Support</a></div>
+        <div><h4>Legal</h4>
+          <a href="terms.html">Terms of Service</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="refund.html">Refund Policy</a>
+        </div>
+      </div>
+      <div class="footer-pay">
+        <h4>We accept</h4>
+        <div class="pay-logos"><span>UPI</span><span>VISA</span><span>MC</span><span>RuPay</span><span>Wallet</span><span>NetBank</span></div>
+      </div>
+    </div>
+    <div class="container footer-bottom">© <span id="year"></span> TopUpWorld. All rights reserved.</div>
+  </footer>
+
+  <!-- ===== Login modal is injected by js/auth.js ===== -->
+
+  <script src="js/config.js"></script><script src="js/catalog.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/home.js"></script>
+</body>
+</html>

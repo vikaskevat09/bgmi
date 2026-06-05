@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About &amp; Copyright — TopUpWorld</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark"><svg viewBox="0 0 40 40" width="34" height="34" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff5a00"/></linearGradient></defs>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#lg)"/>
+          <path d="M22.5 8 12 22.5h6.4L16 32l11.2-15.4H20L22.5 8z" fill="#fff"/></svg></span>
+        <span class="brand-name">TopUp<span>World</span></span>
+      </a>
+      <div class="header-actions" style="margin-left:auto"><a class="btn btn-ghost" href="index.html">Back to store</a></div>
+    </div>
+  </header>
+
+  <main class="container legal-page">
+    <a href="index.html" class="legal-back">← Home</a>
+    <h1>About TopUpWorld</h1>
+    <p>TopUpWorld is a fast, secure game top-up store. Enter your Player ID, pick a pack, pay securely, and receive your in-game currency — usually within seconds.</p>
+
+    <h2>Copyright &amp; Trademarks</h2>
+    <p>All game names, logos, currencies and related marks are the property of their respective publishers and owners. TopUpWorld is an independent top-up service and is not affiliated with, endorsed by, or sponsored by any game publisher unless explicitly stated.</p>
+    <p>Game artwork and logos are used only where licensed. If you are a rights holder and believe content here infringes your rights, contact us and we will address it promptly.</p>
+
+    <h2>Security</h2>
+    <p>Connections are encrypted with TLS. Passwords are stored only as salted scrypt hashes. Payments are processed by a licensed, PCI-DSS compliant gateway. We never request your game account password.</p>
+
+    <p style="margin-top:1.5rem">© <span id="y2"></span> TopUpWorld. All site content, design and branding are owned by TopUpWorld.</p>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-bottom" style="border:none">© <span id="y"></span> TopUpWorld. All rights reserved.</div></footer>
+  <script>var n=new Date();document.getElementById('y').textContent=n.getFullYear();document.getElementById('y2').textContent=n.getFullYear();</script>
+</body>
+</html>

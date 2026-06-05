@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy — TopUpWorld</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark"><svg viewBox="0 0 40 40" width="34" height="34" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff5a00"/></linearGradient></defs>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#lg)"/>
+          <path d="M22.5 8 12 22.5h6.4L16 32l11.2-15.4H20L22.5 8z" fill="#fff"/></svg></span>
+        <span class="brand-name">TopUp<span>World</span></span>
+      </a>
+      <div class="header-actions" style="margin-left:auto"><a class="btn btn-ghost" href="index.html">Back to store</a></div>
+    </div>
+  </header>
+
+  <main class="container legal-page">
+    <a href="index.html" class="legal-back">← Home</a>
+    <h1>Privacy Policy</h1>
+    <p class="legal-updated">Last updated: <span id="d"></span></p>
+
+    <p>This policy explains what we collect and how we use it. We collect only what we need to run the service.</p>
+
+    <h2>1. Information we collect</h2>
+    <p>Your name, email and phone number; the in-game IDs you enter; your order history; and basic technical data such as device/browser information.</p>
+
+    <h2>2. How we use it</h2>
+    <p>To process and deliver your orders, provide support, send order confirmations, prevent fraud, and improve the service. We do not sell your personal data.</p>
+
+    <h2>3. Payment data</h2>
+    <p>Card and bank details are processed entirely by our PCI-DSS compliant payment gateway. TopUpWorld never sees or stores your full card number. Account passwords are stored only as salted scrypt hashes and are never readable.</p>
+
+    <h2>4. Cookies</h2>
+    <p>We use a secure, httpOnly session cookie to keep you signed in. We do not use third-party advertising trackers.</p>
+
+    <h2>5. Your rights</h2>
+    <p>You can request access to, correction of, or deletion of your personal data by contacting support.</p>
+
+    <h2>6. Data retention</h2>
+    <p>We keep order records as required for accounting and dispute resolution, and delete or anonymise data when it is no longer needed.</p>
+  </main>
+
+  <footer class="site-footer"><div class="container footer-bottom" style="border:none">© <span id="y"></span> TopUpWorld. All rights reserved.</div></footer>
+  <script>var n=new Date();document.getElementById('d').textContent=n.toLocaleDateString('en-IN',{dateStyle:'long'});document.getElementById('y').textContent=n.getFullYear();</script>
+</body>
+</html>

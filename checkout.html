@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Checkout — TopUpWorld</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Cashfree Drop-in JS SDK (loads checkout when payment_session_id is ready) -->
+  <script src="https://sdk.cashfree.com/js/v3/cashfree.js"></script>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <span>🔒 Secure checkout</span>
+      <div class="topbar-right"><a href="cart.html">Back to cart</a></div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 40 40" width="34" height="34" fill="none">
+            <defs><linearGradient id="lg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+              <stop stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff5a00"/></linearGradient></defs>
+            <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#lg)"/>
+            <path d="M22.5 8 12 22.5h6.4L16 32l11.2-15.4H20L22.5 8z" fill="#fff"/>
+          </svg>
+        </span>
+        <span class="brand-name">TopUp<span>World</span></span>
+      </a>
+      <div class="header-actions" style="margin-left:auto">
+        <a class="cart-link" href="cart.html" aria-label="Cart">🛒<span class="cart-count" id="cartCount">0</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container page-wrap">
+    <div class="crumbs">
+      <a href="index.html">Home</a><span class="sep">›</span>
+      <a href="cart.html">Cart</a><span class="sep">›</span><span>Checkout</span>
+    </div>
+    <h1 class="page-title">Checkout</h1>
+    <div id="checkoutContent"></div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom" style="border:none">© <span id="year"></span> TopUpWorld. Payments via Cashfree.</div>
+  </footer>
+
+  <script src="js/config.js"></script><script src="js/catalog.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>

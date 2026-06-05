@@ -1,0 +1,18 @@
+# Secrets — never commit
+server/.env
+.env
+
+# Dependencies
+node_modules/
+server/node_modules/
+
+# User data (accounts, orders) — never commit
+server/data/
+
+# Admin-uploaded media
+assets/hero/
+
+# Logs / OS
+*.log
+.DS_Store
+Thumbs.db

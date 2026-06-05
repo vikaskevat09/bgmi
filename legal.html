@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Legal — TopUpWorld</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="container topbar-inner">
+      <span class="topbar-left">Secure game top-ups</span>
+      <div class="topbar-right"><a href="index.html">Back to store</a></div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark"><svg viewBox="0 0 40 40" width="34" height="34" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff5a00"/></linearGradient></defs>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#lg)"/>
+          <path d="M22.5 8 12 22.5h6.4L16 32l11.2-15.4H20L22.5 8z" fill="#fff"/></svg></span>
+        <span class="brand-name">TopUp<span>World</span></span>
+      </a>
+      <div class="header-actions" style="margin-left:auto">
+        <a class="btn btn-ghost" href="index.html">Home</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container legal-wrap">
+    <aside class="legal-nav">
+      <a href="#terms" class="active">Terms of Service</a>
+      <a href="#privacy">Privacy Policy</a>
+      <a href="#refunds">Refund Policy</a>
+      <a href="#copyright">Copyright &amp; Trademarks</a>
+      <a href="#security">Security</a>
+    </aside>
+
+    <article class="legal-body">
+      <p class="legal-updated">Last updated: <span id="legalDate"></span></p>
+
+      <section id="terms">
+        <h1>Terms of Service</h1>
+        <p>Welcome to TopUpWorld. By using this website and placing an order, you agree to these terms. TopUpWorld provides a platform to purchase in-game currency top-ups and prepaid vouchers for supported games.</p>
+        <h3>Using the service</h3>
+        <p>You must provide an accurate in-game Player/Character ID. Top-ups are delivered to the ID you provide. Because deliveries are processed instantly and cannot be reversed, you are responsible for entering the correct ID. We are not liable for deliveries to a wrong ID entered by you.</p>
+        <h3>Pricing &amp; payment</h3>
+        <p>All prices are shown in Indian Rupees (INR) and include any applicable processing fee shown at checkout. Payments are processed securely by our payment partner. We reserve the right to change prices and available products at any time.</p>
+        <h3>Accounts</h3>
+        <p>You are responsible for keeping your account credentials secure. We never ask for your in-game account password.</p>
+      </section>
+
+      <section id="privacy">
+        <h2>Privacy Policy</h2>
+        <p>We collect only the information needed to deliver your order and run the service: your name, email, phone number, the in-game IDs you enter, and your order history.</p>
+        <h3>How we use your data</h3>
+        <p>Your data is used to process orders, deliver top-ups, provide support, and send order confirmations. We do not sell your personal data to third parties.</p>
+        <h3>Payment data</h3>
+        <p>Card and bank details are handled entirely by our PCI-DSS compliant payment gateway. TopUpWorld never sees or stores your full card number.</p>
+        <h3>Your rights</h3>
+        <p>You can request access to or deletion of your personal data by contacting support.</p>
+      </section>
+
+      <section id="refunds">
+        <h2>Refund Policy</h2>
+        <p>Because in-game currency and voucher codes are delivered instantly and cannot be returned, all sales are generally final once delivered.</p>
+        <h3>When refunds apply</h3>
+        <p>If a payment is charged but the top-up is not delivered due to a fault on our side, we will either re-deliver the order or issue a full refund to the original payment method. Refund requests must be raised within 7 days of the order with your order ID.</p>
+        <h3>Wrong ID</h3>
+        <p>Orders delivered to an incorrect ID entered by the customer are not eligible for a refund, since the currency has already been delivered.</p>
+      </section>
+
+      <section id="copyright">
+        <h2>Copyright &amp; Trademarks</h2>
+        <p>All game names, logos, currencies and related marks are the property of their respective publishers and owners. TopUpWorld is an independent top-up service and is not affiliated with, endorsed by, or sponsored by any game publisher unless explicitly stated.</p>
+        <p>Game artwork and logos are used only where licensed. If you are a rights holder and believe content here infringes your rights, contact us and we will address it promptly.</p>
+        <p>© <span id="copyYear"></span> TopUpWorld. All site content, design and branding are owned by TopUpWorld.</p>
+      </section>
+
+      <section id="security">
+        <h2>Security</h2>
+        <p>Connections are encrypted with TLS. Passwords are stored only as salted scrypt hashes and are never readable. Payments are processed by a licensed, PCI-DSS compliant gateway. We never request your game account password.</p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom" style="border:none">© <span id="year"></span> TopUpWorld. All rights reserved.</div>
+  </footer>
+
+  <script>
+    var d = new Date();
+    document.getElementById('legalDate').textContent = d.toLocaleDateString('en-IN', { dateStyle: 'long' });
+    document.getElementById('copyYear').textContent = d.getFullYear();
+    document.getElementById('year').textContent = d.getFullYear();
+    // Smooth highlight of active section link
+    var links = document.querySelectorAll('.legal-nav a');
+    links.forEach(function (a) { a.addEventListener('click', function () {
+      links.forEach(function (x) { x.classList.remove('active'); }); a.classList.add('active');
+    }); });
+  </script>
+</body>
+</html>

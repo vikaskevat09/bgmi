@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order status — TopUpWorld</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand">
+        <span class="brand-mark"><svg viewBox="0 0 40 40" width="34" height="34" fill="none">
+          <defs><linearGradient id="lg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ff8a3d"/><stop offset="1" stop-color="#ff5a00"/></linearGradient></defs>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="url(#lg)"/>
+          <path d="M22.5 8 12 22.5h6.4L16 32l11.2-15.4H20L22.5 8z" fill="#fff"/></svg></span>
+        <span class="brand-name">TopUp<span>World</span></span>
+      </a>
+    </div>
+  </header>
+
+  <main class="container page-wrap">
+    <div class="empty-state" id="statusBox">
+      <div class="es-emoji" id="statusIcon">⏳</div>
+      <h2 id="statusTitle">Checking your payment…</h2>
+      <p id="statusMsg">Hang tight while we confirm your order.</p>
+      <div id="statusActions"></div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom" style="border:none">© <span id="year"></span> TopUpWorld. Demo project.</div>
+  </footer>
+
+  <script src="js/config.js"></script><script src="js/catalog.js"></script>
+  <script src="js/cart.js"></script>
+  <script src="js/ui.js"></script>
+  <script>
+    (function () {
+      const API_BASE = window.TUZ_API_BASE || '';
+      const orderId = new URLSearchParams(location.search).get('order_id');
+      const icon = document.getElementById('statusIcon');
+      const title = document.getElementById('statusTitle');
+      const msg = document.getElementById('statusMsg');
+      const actions = document.getElementById('statusActions');
+
+      function show(ic, t, m, html) {
+        icon.textContent = ic; title.textContent = t; msg.textContent = m;
+        actions.innerHTML = html || '';
+      }
+
+      if (!orderId) {
+        show('❓', 'No order found', 'We could not find an order reference.',
+          '<a class="btn btn-primary btn-lg" href="index.html">Back to home</a>');
+        return;
+      }
+
+      let tries = 0;
+      async function poll() {
+        tries++;
+        try {
+          const res = await fetch(API_BASE + '/api/order/' + encodeURIComponent(orderId));
+          const data = await res.json();
+          if (data.status === 'SUCCESS') {
+            window.Cart.clear();
+            show('✅', 'Payment successful!',
+              'Your top-up for order ' + orderId + ' is being delivered to your game account.',
+              '<a class="btn btn-primary btn-lg" href="index.html">Top up again</a>');
+            return;
+          }
+          if (data.status === 'FAILED' || data.status === 'USER_DROPPED') {
+            show('❌', 'Payment not completed',
+              'Your payment didn\'t go through. No amount was charged.',
+              '<a class="btn btn-primary btn-lg" href="cart.html">Try again</a>');
+            return;
+          }
+        } catch (e) { /* keep polling */ }
+        if (tries < 10) setTimeout(poll, 1500);
+        else show('⏳', 'Still processing',
+          'Your payment is taking a moment. We\'ll email you once it\'s confirmed.',
+          '<a class="btn btn-primary btn-lg" href="index.html">Back to home</a>');
+      }
+      poll();
+    })();
+  </script>
+</body>
+</html>
