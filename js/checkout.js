@@ -72,9 +72,17 @@
               <div class="mi-price">${window.inr(it.lineTotal)}</div>
             </div>`).join('')}
         </div>
-        <div class="summary-line"><span>Subtotal</span><strong>${window.inr(t.subtotal)}</strong></div>
-        <div class="summary-line"><span>Processing fee (2%)</span><strong>${window.inr(t.fee)}</strong></div>
-        <div class="summary-line total"><span>Total payable</span><strong>${window.inr(t.total)}</strong></div>
+        <div class="coupon-box">
+          <div class="coupon-row">
+            <input id="couponInput" type="text" placeholder="Coupon code (e.g. NEWUSER)" autocomplete="off" />
+            <button class="btn btn-dark btn-sm" id="couponBtn" type="button">Apply</button>
+          </div>
+          <p class="coupon-msg" id="couponMsg">🎉 Use <strong>NEWUSER</strong> for 50% off Free Fire &amp; BGMI Mega packs.</p>
+        </div>
+        <div class="summary-line"><span>Subtotal</span><strong id="sumSubtotal">${window.inr(t.subtotal)}</strong></div>
+        <div class="summary-line" id="sumDiscountRow" style="display:none"><span>Discount</span><strong id="sumDiscount" style="color:#34c759">-₹0</strong></div>
+        <div class="summary-line"><span>Processing fee (2%)</span><strong id="sumFee">${window.inr(t.fee)}</strong></div>
+        <div class="summary-line total"><span>Total payable</span><strong id="sumTotal">${window.inr(t.total)}</strong></div>
         <button class="btn btn-primary btn-block btn-lg" id="payBtn" style="margin-top:1rem">🔒 Pay ${window.inr(t.total)}</button>
         <a class="btn btn-ghost btn-block" href="cart.html" style="margin-top:.6rem">Back to cart</a>
         <div class="pay-badges">
@@ -83,6 +91,65 @@
         <div class="secure-note">🔒 Secured by Cashfree Payments — all methods available at checkout</div>
       </aside>
     </div>`;
+
+  // ----- Coupon handling (server is authoritative) -----
+  let appliedCoupon = null;
+  let totals = { subtotal: t.subtotal, fee: t.fee, total: t.total, discount: 0 };
+
+  function paymentItems() {
+    return window.Cart.items().map(it => ({
+      sku: it.sku, qty: it.qty, playerId: it.playerId, serverId: it.serverId, username: it.username,
+    }));
+  }
+
+  function renderTotals() {
+    document.getElementById('sumSubtotal').textContent = window.inr(totals.subtotal);
+    document.getElementById('sumFee').textContent = window.inr(totals.fee);
+    document.getElementById('sumTotal').textContent = window.inr(totals.total);
+    const dRow = document.getElementById('sumDiscountRow');
+    if (totals.discount > 0) {
+      dRow.style.display = '';
+      document.getElementById('sumDiscount').textContent = '-' + window.inr(totals.discount);
+    } else {
+      dRow.style.display = 'none';
+    }
+    const btn = document.getElementById('payBtn');
+    if (!btn.disabled) btn.textContent = '🔒 Pay ' + window.inr(totals.total);
+  }
+
+  async function applyCoupon() {
+    const input = document.getElementById('couponInput');
+    const msg = document.getElementById('couponMsg');
+    const code = input.value.trim();
+    if (!code) { window.toast('⚠️ Enter a coupon code.', 'err'); return; }
+    try {
+      const res = await fetch(API_BASE + '/api/price-cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: paymentItems(), coupon: code }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Could not apply coupon.');
+      if (data.couponValid && data.discount > 0) {
+        appliedCoupon = data.coupon;
+        totals = { subtotal: data.subtotal, fee: data.fee, total: data.total, discount: data.discount };
+        msg.innerHTML = `✅ <strong>${data.coupon}</strong> applied — you saved ${window.inr(data.discount)}! (${data.couponMessage})`;
+        msg.classList.add('ok');
+        renderTotals();
+        window.toast('✅ Coupon applied — saved ' + window.inr(data.discount), 'ok');
+      } else {
+        appliedCoupon = null;
+        totals = { subtotal: data.subtotal, fee: data.fee, total: data.total, discount: 0 };
+        msg.textContent = '⚠️ ' + (data.couponMessage || 'This coupon is not valid for your cart.');
+        msg.classList.remove('ok');
+        renderTotals();
+      }
+    } catch (e) {
+      window.toast('⚠️ ' + e.message, 'err');
+    }
+  }
+  document.getElementById('couponBtn').addEventListener('click', applyCoupon);
+  document.getElementById('couponInput').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); applyCoupon(); } });
 
   function validate() {
     const name = document.getElementById('cName').value.trim();
@@ -117,6 +184,7 @@
     // Backend gets only SKUs + qty + account info; it recomputes price itself.
     const payload = {
       customer,
+      coupon: appliedCoupon || undefined,
       items: window.Cart.items().map(it => ({
         sku: it.sku, qty: it.qty, playerId: it.playerId, serverId: it.serverId, username: it.username,
       })),
@@ -152,7 +220,7 @@
       console.error(e);
       window.toast('❌ ' + e.message, 'err');
       btn.disabled = false;
-      btn.textContent = '🔒 Pay ' + window.inr(t.total);
+      btn.textContent = '🔒 Pay ' + window.inr(totals.total);
       if (/Failed to fetch|NetworkError/i.test(e.message)) {
         window.toast('Backend not reachable. Start the server first.', 'err');
       }

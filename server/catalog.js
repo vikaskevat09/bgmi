@@ -45,6 +45,41 @@ export const PRICES = {
 export const FEE_RATE = 0.02; // 2% processing fee, matches the client display
 
 /**
+ * Discount coupons. Codes are matched case-insensitively.
+ *  type    : 'percent' (value = % off) or 'flat' (value = ₹ off)
+ *  skus    : if set, the discount only applies to these SKUs' line totals
+ *  label   : shown to the customer when the coupon is valid
+ */
+export const COUPONS = {
+  NEWUSER: {
+    type: 'percent',
+    value: 50,
+    skus: ['free-fire-5600', 'bgmi-8100'], // Free Fire & BGMI "Mega pack"
+    label: '50% off Free Fire & BGMI Mega packs',
+  },
+};
+
+/** Compute the discount a coupon grants for the given priced lines. */
+export function computeDiscount(code, lines) {
+  if (!code) return { code: null, discount: 0, valid: false, message: '' };
+  const c = COUPONS[String(code).trim().toUpperCase()];
+  if (!c) return { code: null, discount: 0, valid: false, message: 'Invalid coupon code.' };
+  let eligible = 0;
+  for (const l of lines) {
+    if (c.skus && !c.skus.includes(l.sku)) continue;
+    eligible += l.lineTotal;
+  }
+  if (eligible <= 0) {
+    return { code: null, discount: 0, valid: false,
+      message: 'This coupon applies only to Free Fire & BGMI Mega packs.' };
+  }
+  const discount = c.type === 'percent'
+    ? Math.round(eligible * c.value / 100)
+    : Math.min(c.value, eligible);
+  return { code: String(code).trim().toUpperCase(), discount, valid: true, message: c.label };
+}
+
+/**
  * Maps our internal game ids to the RapidAPI game slug used in the verification
  * URL. ONLY games that the configured provider actually supports belong here.
  * Confirmed working on the id-game-checker provider. Games NOT listed here are
@@ -65,8 +100,9 @@ export const VERIFY_SLUGS = {
 export const VERIFY_NEEDS_SERVER = { 'mobile-legends': true };
 
 /** Recompute the authoritative total from SKUs the client sent.
- *  `priceFor(sku, basePrice)` lets the caller apply admin overrides. */
-export function priceCart(items, priceFor) {
+ *  `priceFor(sku, basePrice)` lets the caller apply admin overrides.
+ *  `couponCode` (optional) applies a discount before the processing fee. */
+export function priceCart(items, priceFor, couponCode) {
   const resolve = typeof priceFor === 'function' ? priceFor : (_sku, base) => base;
   let subtotal = 0;
   const lines = [];
@@ -81,6 +117,13 @@ export function priceCart(items, priceFor) {
       serverId: String(it.serverId || '').slice(0, 64),
       username: String(it.username || '').slice(0, 64) });
   }
-  const fee = subtotal > 0 ? Math.round(subtotal * FEE_RATE) : 0;
-  return { lines, subtotal, fee, total: subtotal + fee };
+  const disc = computeDiscount(couponCode, lines);
+  const discounted = Math.max(0, subtotal - disc.discount);
+  const fee = discounted > 0 ? Math.round(discounted * FEE_RATE) : 0;
+  return {
+    lines, subtotal,
+    discount: disc.discount, coupon: disc.valid ? disc.code : null,
+    couponMessage: disc.message, couponValid: disc.valid,
+    fee, total: discounted + fee,
+  };
 }

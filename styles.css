@@ -194,7 +194,7 @@ input::placeholder, textarea::placeholder { color: var(--muted-2); }
 .games-grid { display: flex; gap: 1.25rem; overflow-x: auto; scroll-snap-type: x mandatory;
   padding: .3rem .2rem 1rem; scrollbar-width: none; }
 .games-grid::-webkit-scrollbar { display: none; }
-.game-card { flex: 0 0 280px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
+.game-card { flex: 0 0 320px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); overflow: hidden; transition: .22s ease; box-shadow: var(--shadow-sm); }
 .game-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: #ffae6b; }
 .game-thumb { aspect-ratio: 3/4; position: relative; overflow: hidden; background: var(--bg-soft); }
@@ -534,7 +534,7 @@ input::placeholder, textarea::placeholder { color: var(--muted-2); }
 .trending-rail { display: flex; gap: 1.1rem; overflow-x: auto; padding-bottom: .5rem; scroll-snap-type: x mandatory;
   scrollbar-width: none; -ms-overflow-style: none; }
 .trending-rail::-webkit-scrollbar { display: none; height: 0; }
-.trend-card { flex: 0 0 250px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
+.trend-card { flex: 0 0 320px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); overflow: hidden; position: relative; transition: .2s; box-shadow: var(--shadow-sm); }
 .trend-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: #ffd2ad; }
 .trend-rank { position: absolute; top: .5rem; left: .5rem; z-index: 2; background: var(--black); color: #fff;

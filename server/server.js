@@ -416,10 +416,32 @@ app.get('/api/my-orders', requireAuth, (req, res) => {
 });
 
 
+/* ---- Coupon / price preview (lets the checkout show an accurate total) ---- */
+app.post('/api/price-cart', (req, res) => {
+  try {
+    const { items, coupon } = req.body || {};
+    if (!Array.isArray(items) || !items.length) {
+      return res.status(400).json({ message: 'Cart is empty.' });
+    }
+    const priced = priceCart(items, admin.priceFor, coupon);
+    res.json({
+      subtotal: priced.subtotal,
+      discount: priced.discount,
+      coupon: priced.coupon,
+      couponValid: priced.couponValid,
+      couponMessage: priced.couponMessage,
+      fee: priced.fee,
+      total: priced.total,
+    });
+  } catch (e) {
+    res.status(400).json({ message: e.message || 'Could not price cart.' });
+  }
+});
+
 /* ---- Create order ---- */
 app.post('/api/create-order', async (req, res) => {
   try {
-    const { items, customer } = req.body || {};
+    const { items, customer, coupon } = req.body || {};
     if (!Array.isArray(items) || !items.length) {
       return res.status(400).json({ message: 'Cart is empty.' });
     }
@@ -428,7 +450,7 @@ app.post('/api/create-order', async (req, res) => {
     }
 
     // Authoritative pricing — ignores any amount the client might send.
-    const priced = priceCart(items, admin.priceFor);
+    const priced = priceCart(items, admin.priceFor, coupon);
     if (priced.total <= 0) return res.status(400).json({ message: 'Invalid order total.' });
 
     if (!CASHFREE_APP_ID || !CASHFREE_SECRET_KEY) {
@@ -483,6 +505,8 @@ app.post('/api/create-order', async (req, res) => {
       userId: req.user ? req.user.id : null,
       status: 'CREATED',
       amount: priced.total,
+      discount: priced.discount,
+      coupon: priced.coupon,
       lines: priced.lines,
       customer,
       createdAt: Date.now(),

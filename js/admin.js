@@ -148,55 +148,40 @@
     </div>`;
   }
 
-  /* ---------- LOGOS + CURRENCY ICONS ---------- */
+  /* ---------- LOGOS ---------- */
   async function renderLogos() {
     const view = $('adminView');
-    let logos = {}, currencyIcons = {};
-    try { const c = await api('GET', '/api/config'); logos = c.logos || {}; currencyIcons = c.currencyIcons || {}; } catch {}
+    let logos = {};
+    try { const c = await api('GET', '/api/config'); logos = c.logos || {}; } catch {}
     view.innerHTML = `
       <div class="admin-card">
-        <h3>Game logos &amp; currency icons</h3>
-        <p class="admin-hint">Upload a <strong>cover logo</strong> (portrait, max 5MB) and a small <strong>currency icon</strong> (PNG/WEBP, shown next to the amount in the cart, max 2MB). Only use artwork you are licensed to use.</p>
+        <h3>Game logos</h3>
+        <p class="admin-hint">Upload a <strong>cover logo</strong> (portrait, max 5MB) for each game. Only use artwork you are licensed to use.</p>
         <div class="logo-grid">
           ${C.games.map(g => `
             <div class="logo-card">
               <div class="logo-thumb">${cover(g.id)}</div>
               <div class="logo-info">
                 <h4>${esc(g.name)}</h4>
-                <p>${logos[g.id] ? 'Custom logo set' : 'Using placeholder'} · ${currencyIcons[g.id] ? 'currency icon set' : 'no currency icon'}</p>
+                <p>${logos[g.id] ? 'Custom logo set' : 'Using placeholder'}</p>
                 <div class="logo-actions">
                   <button class="btn btn-primary" data-upload="${g.id}">Logo</button>
                   ${logos[g.id] ? `<button class="btn btn-ghost" data-remove-logo="${g.id}">✕</button>` : ''}
-                </div>
-                <div class="logo-actions" style="margin-top:.4rem">
-                  <button class="btn btn-ghost" data-cur="${g.id}">
-                    ${currencyIcons[g.id] ? `<img src="${assetUrl(currencyIcons[g.id])}" style="width:16px;height:16px;vertical-align:-3px;margin-right:4px">` : ''}Currency icon
-                  </button>
-                  ${currencyIcons[g.id] ? `<button class="btn btn-ghost" data-remove-cur="${g.id}">✕</button>` : ''}
                 </div>
               </div>
             </div>`).join('')}
         </div>
         <input type="file" id="logoFile" accept="image/png,image/jpeg,image/webp" style="display:none" />
-        <input type="file" id="curFile" accept="image/png,image/webp" style="display:none" />
       </div>`;
 
     const fileInput = $('logoFile');
-    const curInput = $('curFile');
-    let targetGame = null, curTarget = null;
+    let targetGame = null;
 
     view.querySelectorAll('[data-upload]').forEach(b => b.addEventListener('click', () => {
       targetGame = b.dataset.upload; fileInput.value = ''; fileInput.click();
     }));
     view.querySelectorAll('[data-remove-logo]').forEach(b => b.addEventListener('click', async () => {
       try { await api('DELETE', '/api/admin/logo/' + b.dataset.removeLogo); saved('✓ Logo removed'); renderLogos(); }
-      catch (e) { window.toast('⚠️ ' + e.message, 'err'); }
-    }));
-    view.querySelectorAll('[data-cur]').forEach(b => b.addEventListener('click', () => {
-      curTarget = b.dataset.cur; curInput.value = ''; curInput.click();
-    }));
-    view.querySelectorAll('[data-remove-cur]').forEach(b => b.addEventListener('click', async () => {
-      try { await api('DELETE', '/api/admin/currency/' + b.dataset.removeCur); saved('✓ Currency icon removed'); renderLogos(); }
       catch (e) { window.toast('⚠️ ' + e.message, 'err'); }
     }));
 
@@ -207,18 +192,6 @@
       const reader = new FileReader();
       reader.onload = async () => {
         try { await api('POST', '/api/admin/logo/' + targetGame, { dataUrl: reader.result }); saved('✓ Logo uploaded'); renderLogos(); }
-        catch (e) { window.toast('⚠️ ' + e.message, 'err'); }
-      };
-      reader.readAsDataURL(file);
-    };
-
-    curInput.onchange = () => {
-      const file = curInput.files[0];
-      if (!file || !curTarget) return;
-      if (file.size > 2 * 1024 * 1024) { window.toast('⚠️ Icon too large (max 2MB).', 'err'); return; }
-      const reader = new FileReader();
-      reader.onload = async () => {
-        try { await api('POST', '/api/admin/currency/' + curTarget, { dataUrl: reader.result }); saved('✓ Currency icon uploaded'); renderLogos(); }
         catch (e) { window.toast('⚠️ ' + e.message, 'err'); }
       };
       reader.readAsDataURL(file);
