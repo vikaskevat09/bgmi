@@ -653,7 +653,16 @@ function normalizeVerify(data, fallbackId) {
 }
 
 /* ---- Static site ---- */
-app.use(express.static(ROOT));
+app.use(express.static(ROOT, {
+  setHeaders: (res, filePath) => {
+    // Cache images/fonts aggressively; keep HTML fresh.
+    if (/\.(png|jpe?g|webp|svg|gif|ico|woff2?)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=2592000'); // 30 days
+    } else if (/\.html?$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  },
+}));
 
 app.listen(PORT, () => {
   console.log(`TopUpWorld server running at http://localhost:${PORT}`);

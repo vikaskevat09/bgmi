@@ -250,9 +250,9 @@
     // Fall back to the bundled banner images when the admin hasn't uploaded any.
     if (!slides || !slides.length) {
       slides = [
-        { id: 'b1', image: 'assets/games/banner1.png' },
-        { id: 'b2', image: 'assets/games/banner2.png' },
-        { id: 'b3', image: 'assets/games/banner3.png' },
+        { id: 'b1', image: 'assets/games/banner1.jpg' },
+        { id: 'b2', image: 'assets/games/banner2.jpg' },
+        { id: 'b3', image: 'assets/games/banner3.jpg' },
       ];
     }
     heroEl.style.display = '';
