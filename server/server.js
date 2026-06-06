@@ -235,50 +235,6 @@ app.delete('/api/admin/logo/:gameId', requireAdmin, async (req, res) => {
   res.json({ ok: true });
 });
 
-/* ---- Admin: currency icon upload / remove (per game) ----
- * Small PNG/WEBP shown next to the currency amount in cart/checkout. */
-app.post('/api/admin/currency/:gameId', requireAdmin, async (req, res) => {
-  try {
-    const gameId = String(req.params.gameId).replace(/[^a-z0-9-]/gi, '');
-    const { dataUrl } = req.body || {};
-    const m = /^data:image\/(png|webp|jpe?g);base64,(.+)$/i.exec(dataUrl || '');
-    if (!gameId || !m) return res.status(400).json({ message: 'Provide a PNG/WEBP image.' });
-    const buf = Buffer.from(m[2], 'base64');
-    if (buf.length > 2 * 1024 * 1024) return res.status(400).json({ message: 'Icon too large (max 2MB).' });
-
-    if (cloudEnabled()) {
-      const url = await uploadImage(dataUrl, `topupworld/currency/${gameId}`);
-      admin.setCurrencyIcon(gameId, url);
-      return res.json({ ok: true, file: url });
-    }
-    let ext = m[1].toLowerCase(); if (ext === 'jpeg') ext = 'jpg';
-    const dir = path.join(ROOT, 'assets', 'currency');
-    fs.mkdirSync(dir, { recursive: true });
-    for (const e of ['png', 'jpg', 'webp']) {
-      const p = path.join(dir, `${gameId}.${e}`);
-      if (e !== ext && fs.existsSync(p)) { try { fs.unlinkSync(p); } catch {} }
-    }
-    fs.writeFileSync(path.join(dir, `${gameId}.${ext}`), buf);
-    admin.setCurrencyIcon(gameId, `assets/currency/${gameId}.${ext}`);
-    res.json({ ok: true, file: `assets/currency/${gameId}.${ext}` });
-  } catch (e) {
-    console.error('currency upload error:', e);
-    res.status(500).json({ message: e.message || 'Upload failed.' });
-  }
-});
-
-app.delete('/api/admin/currency/:gameId', requireAdmin, async (req, res) => {
-  const gameId = String(req.params.gameId).replace(/[^a-z0-9-]/gi, '');
-  if (cloudEnabled()) { await destroyImage(`topupworld/currency/${gameId}`); }
-  const dir = path.join(ROOT, 'assets', 'currency');
-  for (const e of ['png', 'jpg', 'webp']) {
-    const p = path.join(dir, `${gameId}.${e}`);
-    if (fs.existsSync(p)) { try { fs.unlinkSync(p); } catch {} }
-  }
-  admin.clearCurrencyIcon(gameId);
-  res.json({ ok: true });
-});
-
 /* ---- Admin: site (brand) logo upload / remove ---- */
 app.post('/api/admin/site-logo', requireAdmin, async (req, res) => {
   try {

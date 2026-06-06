@@ -24,7 +24,7 @@ window.CATALOG = {
     { id: 'free-fire', name: 'Free Fire', publisher: 'Garena', category: 'battle',
       badge: 'HOT', currency: 'Diamonds', region: 'India', idLabel: 'Player ID',
       denoms: [
-        { sku: 'free-fire-100',  label: '800 Diamonds',  bonus: '',           price: 80 },
+        { sku: 'free-fire-100',  label: '100 Diamonds',  bonus: '',           price: 80 },
         { sku: 'free-fire-310',  label: '2480 Diamonds',  bonus: '+31 bonus',  price: 240 },
         { sku: 'free-fire-520',  label: '4160 Diamonds',  bonus: '+52 bonus',  price: 400 },
         { sku: 'free-fire-1060', label: '8480 Diamonds', bonus: '+106 bonus', price: 799 },
@@ -34,7 +34,7 @@ window.CATALOG = {
     { id: 'bgmi', name: 'BGMI', publisher: 'Krafton', category: 'battle',
       badge: 'POPULAR', currency: 'UC', region: 'India', idLabel: 'Character ID',
       denoms: [
-        { sku: 'bgmi-60',   label: '480 UC',   bonus: '',           price: 75 },
+        { sku: 'bgmi-60',   label: '60 UC',   bonus: '',           price: 75 },
         { sku: 'bgmi-325',  label: '2600 UC',  bonus: '+25 bonus',  price: 419 },
         { sku: 'bgmi-660',  label: '660 UC',  bonus: '+60 bonus',  price: 799 },
         { sku: 'bgmi-1800', label: '1800 UC', bonus: '+300 bonus', price: 1950 },
@@ -44,7 +44,7 @@ window.CATALOG = {
     { id: 'pubg-mobile', name: 'PUBG Mobile', publisher: 'Krafton / Tencent', category: 'battle',
       badge: '', currency: 'UC', region: 'Global', idLabel: 'Character ID',
       denoms: [
-        { sku: 'pubg-mobile-60',   label: '480 UC',   bonus: '',           price: 75 },
+        { sku: 'pubg-mobile-60',   label: '60 UC',   bonus: '',           price: 75 },
         { sku: 'pubg-mobile-325',  label: '2600 UC',  bonus: '+25 bonus',  price: 419 },
         { sku: 'pubg-mobile-660',  label: '660 UC',  bonus: '+60 bonus',  price: 799 },
         { sku: 'pubg-mobile-1800', label: '1800 UC', bonus: '+300 bonus', price: 1950 },
@@ -54,7 +54,7 @@ window.CATALOG = {
     { id: 'mobile-legends', name: 'Mobile Legends: Bang Bang', publisher: 'Moonton', category: 'moba',
       badge: '', currency: 'Diamonds', region: 'Global', idLabel: 'User ID',
       denoms: [
-        { sku: 'mobile-legends-86',   label: '688 Diamonds',   bonus: '',           price: 99 },
+        { sku: 'mobile-legends-86',   label: '86 Diamonds',   bonus: '',           price: 99 },
         { sku: 'mobile-legends-172',  label: '1376 Diamonds',  bonus: '',           price: 189 },
         { sku: 'mobile-legends-257',  label: '257 Diamonds',  bonus: '+13 bonus',  price: 279 },
         { sku: 'mobile-legends-706',  label: '706 Diamonds',  bonus: '+34 bonus',  price: 749 },
@@ -64,7 +64,7 @@ window.CATALOG = {
     { id: 'genshin-impact', name: 'Genshin Impact', publisher: 'HoYoverse', category: 'adventure',
       badge: 'NEW', currency: 'Genesis Crystals', region: 'Asia', idLabel: 'UID',
       denoms: [
-        { sku: 'genshin-impact-60',   label: '480 Crystals',         bonus: '',           price: 89 },
+        { sku: 'genshin-impact-60',   label: '60 Crystals',         bonus: '',           price: 89 },
         { sku: 'genshin-impact-330',  label: '2400 +240 Crystals',    bonus: '+30 bonus',  price: 449 },
         { sku: 'genshin-impact-1090', label: '980 +110 Crystals',   bonus: '+110 bonus', price: 1299 },
         { sku: 'genshin-impact-2240', label: '1980 +260 Crystals',  bonus: '+260 bonus', price: 2599 },
@@ -74,7 +74,7 @@ window.CATALOG = {
     { id: 'cod-mobile', name: 'Call of Duty: Mobile', publisher: 'Activision / Garena', category: 'shooter',
       badge: '', currency: 'CP', region: 'Global', idLabel: 'Open ID',
       denoms: [
-        { sku: 'cod-mobile-80',    label: '640 CP',    bonus: '',           price: 75 },
+        { sku: 'cod-mobile-80',    label: '80 CP',    bonus: '',           price: 75 },
         { sku: 'cod-mobile-400',   label: '3200 CP',   bonus: '+40 bonus',  price: 389 },
         { sku: 'cod-mobile-800',   label: '800 CP',   bonus: '+80 bonus',  price: 759 },
         { sku: 'cod-mobile-2000',  label: '2000 CP',  bonus: '+200 bonus', price: 1799 },
@@ -84,7 +84,7 @@ window.CATALOG = {
     { id: 'valorant', name: 'Valorant', publisher: 'Riot Games', category: 'shooter',
       badge: '', currency: 'VP', region: 'Global', idLabel: 'Riot ID',
       denoms: [
-        { sku: 'valorant-475',   label: '3800 VP',   bonus: '',           price: 399 },
+        { sku: 'valorant-475',   label: '475 VP',   bonus: '',           price: 399 },
         { sku: 'valorant-1000',  label: '8000 VP',  bonus: '+50 bonus',  price: 799 },
         { sku: 'valorant-2050',  label: '2050 VP',  bonus: '+150 bonus', price: 1599 },
         { sku: 'valorant-3650',  label: '3650 VP',  bonus: '+300 bonus', price: 2799 },
@@ -94,7 +94,7 @@ window.CATALOG = {
     { id: 'clash-of-clans', name: 'Clash of Clans', publisher: 'Supercell', category: 'strategy',
       badge: '', currency: 'Gems', region: 'Global', idLabel: 'Player Tag',
       denoms: [
-        { sku: 'clash-of-clans-80',    label: '640 Gems',    bonus: '',           price: 79 },
+        { sku: 'clash-of-clans-80',    label: '80 Gems',    bonus: '',           price: 79 },
         { sku: 'clash-of-clans-500',   label: '4000 Gems',   bonus: '+50 bonus',  price: 399 },
         { sku: 'clash-of-clans-1200',  label: '1200 Gems',  bonus: '+150 bonus', price: 899 },
         { sku: 'clash-of-clans-2500',  label: '2500 Gems',  bonus: '+400 bonus', price: 1799 },
@@ -104,7 +104,7 @@ window.CATALOG = {
     { id: 'clash-royale', name: 'Clash Royale', publisher: 'Supercell', category: 'strategy',
       badge: '', currency: 'Gems', region: 'Global', idLabel: 'Player Tag',
       denoms: [
-        { sku: 'clash-royale-80',    label: '640 Gems',    bonus: '',           price: 79 },
+        { sku: 'clash-royale-80',    label: '80 Gems',    bonus: '',           price: 79 },
         { sku: 'clash-royale-500',   label: '4000 Gems',   bonus: '+50 bonus',  price: 399 },
         { sku: 'clash-royale-1200',  label: '1200 Gems',  bonus: '+150 bonus', price: 899 },
         { sku: 'clash-royale-2500',  label: '2500 Gems',  bonus: '+400 bonus', price: 1799 },
@@ -114,7 +114,7 @@ window.CATALOG = {
     { id: 'honkai-star-rail', name: 'Honkai: Star Rail', publisher: 'HoYoverse', category: 'adventure',
       badge: 'NEW', currency: 'Oneiric Shards', region: 'Asia', idLabel: 'UID',
       denoms: [
-        { sku: 'honkai-star-rail-60',   label: '480 Shards',   bonus: '',           price: 89 },
+        { sku: 'honkai-star-rail-60',   label: '60 Shards',   bonus: '',           price: 89 },
         { sku: 'honkai-star-rail-330',  label: '2640 Shards',  bonus: '+30 bonus',  price: 449 },
         { sku: 'honkai-star-rail-1090', label: '1090 Shards', bonus: '+110 bonus', price: 1299 },
         { sku: 'honkai-star-rail-2240', label: '2240 Shards', bonus: '+260 bonus', price: 2599 },
@@ -124,7 +124,7 @@ window.CATALOG = {
     { id: 'wild-rift', name: 'LoL: Wild Rift', publisher: 'Riot Games', category: 'moba',
       badge: '', currency: 'Wild Cores', region: 'Global', idLabel: 'Riot ID',
       denoms: [
-        { sku: 'wild-rift-225',  label: '1800 Cores',  bonus: '',           price: 299 },
+        { sku: 'wild-rift-225',  label: '225 Cores',  bonus: '',           price: 299 },
         { sku: 'wild-rift-525',  label: '4200 Cores',  bonus: '+25 bonus',  price: 699 },
         { sku: 'wild-rift-1075', label: '1075 Cores', bonus: '+75 bonus',  price: 1399 },
         { sku: 'wild-rift-2195', label: '2195 Cores', bonus: '+195 bonus', price: 2799 },
@@ -134,7 +134,7 @@ window.CATALOG = {
     { id: 'pokemon-unite', name: 'Pokémon UNITE', publisher: 'The Pokémon Company', category: 'moba',
       badge: '', currency: 'Aeos Gems', region: 'Global', idLabel: 'Trainer ID',
       denoms: [
-        { sku: 'pokemon-unite-60',   label: '480 Aeos Gems',   bonus: '',           price: 79 },
+        { sku: 'pokemon-unite-60',   label: '60 Aeos Gems',   bonus: '',           price: 79 },
         { sku: 'pokemon-unite-250',  label: '2000 Aeos Gems',  bonus: '+15 bonus',  price: 319 },
         { sku: 'pokemon-unite-490',  label: '490 Aeos Gems',  bonus: '+40 bonus',  price: 599 },
         { sku: 'pokemon-unite-1000', label: '1000 Aeos Gems', bonus: '+100 bonus', price: 1199 },

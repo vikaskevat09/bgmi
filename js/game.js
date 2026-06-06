@@ -17,11 +17,25 @@
 
   const needsServer = !!C.needsServer[game.id];
   const idRule = C.idRules[game.id] || {};
-  const state = { sku: game.denoms[0].sku, pay: 'UPI', verifiedId: null, username: null, confirmed: false };
+  const state = { sku: game.denoms[0].sku, verifiedId: null, username: null, confirmed: false };
   const API_BASE = window.TUZ_API_BASE || '';
+
+  // Flash sale: 50% off the Mega pack for Free Fire & BGMI (redeem with code NEWUSER).
+  const FLASH_GAMES = { 'free-fire': true, 'bgmi': true };
+  function isFlashDenom(d) {
+    return !!FLASH_GAMES[game.id] && /mega/i.test(d.bonus || '');
+  }
 
   function denomHTML(d) {
     const cur = window.currencyIconHTML ? window.currencyIconHTML(game.id) : '';
+    if (isFlashDenom(d)) {
+      const deal = Math.round(d.price * 0.5);
+      return `<button class="denom denom-flash${d.sku === state.sku ? ' is-active' : ''}" data-sku="${d.sku}">
+        <span class="denom-flag flash-flag">🔥 FLASH 50% OFF · code NEWUSER</span>
+        <span class="denom-amt">${cur}${d.label}</span>
+        <span class="denom-price"><span class="denom-was">${window.inr(d.price)}</span> ${window.inr(deal)}</span>
+      </button>`;
+    }
     return `<button class="denom${d.sku === state.sku ? ' is-active' : ''}" data-sku="${d.sku}">
       ${d.bonus ? `<span class="denom-flag">${d.bonus}</span>` : ''}
       <span class="denom-amt">${cur}${d.label}</span>

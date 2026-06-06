@@ -146,6 +146,6 @@
       "if(i<x.length){this.dataset.i=i;this.src='" + base + ".'+x[i];}else{this.onerror=null;}";
     return `<img src="${src}" data-i="${startExt === 'custom' ? 'custom' : 0}" alt="${alt || ''}"` +
       (className ? ` class="${className}"` : '') +
-      ` loading="lazy" onerror="${onerr}" />`;
+      ` loading="lazy" decoding="async" onerror="${onerr}" />`;
   };
 })();
