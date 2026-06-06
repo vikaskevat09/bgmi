@@ -218,7 +218,7 @@ input::placeholder, textarea::placeholder { color: var(--muted-2); }
 .rail-next { right: -10px; }
 
 /* ===== Vouchers ===== */
-.vouchers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.2rem; }
+.vouchers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(185px, 1fr)); gap: 1rem; }
 .voucher-card { border-radius: var(--radius); padding: 1.3rem; color: #fff; position: relative; overflow: hidden;
   min-height: 160px; display: flex; flex-direction: column; justify-content: space-between; transition: .2s;
   border: none; text-align: left; }
@@ -534,7 +534,7 @@ input::placeholder, textarea::placeholder { color: var(--muted-2); }
 .trending-rail { display: flex; gap: 1.1rem; overflow-x: auto; padding-bottom: .5rem; scroll-snap-type: x mandatory;
   scrollbar-width: none; -ms-overflow-style: none; }
 .trending-rail::-webkit-scrollbar { display: none; height: 0; }
-.trend-card { flex: 0 0 320px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
+.trend-card { flex: 0 0 200px; scroll-snap-align: start; background: var(--surface); border: 1px solid var(--line);
   border-radius: var(--radius); overflow: hidden; position: relative; transition: .2s; box-shadow: var(--shadow-sm); }
 .trend-card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: #ffd2ad; }
 .trend-rank { position: absolute; top: .5rem; left: .5rem; z-index: 2; background: var(--black); color: #fff;
@@ -707,7 +707,7 @@ input::placeholder, textarea::placeholder { color: var(--muted-2); }
 }
 
 /* ===== Exclusive offers ===== */
-.offers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.3rem; }
+.offers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(175px, 1fr)); gap: 1rem; }
 .offer-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
   overflow: hidden; transition: .22s ease; box-shadow: var(--shadow-sm); }
 .offer-card:hover { transform: translateY(-6px); box-shadow: var(--shadow); border-color: #ffae6b; }

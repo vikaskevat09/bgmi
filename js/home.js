@@ -247,10 +247,13 @@
     const loading = document.getElementById('heroLoading');
     if (!heroEl) return;
     if (loading) loading.remove();
+    // Fall back to the bundled banner images when the admin hasn't uploaded any.
     if (!slides || !slides.length) {
-      // No images uploaded yet → hide the hero section entirely.
-      heroEl.style.display = 'none';
-      return;
+      slides = [
+        { id: 'b1', image: 'assets/games/banner1.png' },
+        { id: 'b2', image: 'assets/games/banner2.png' },
+        { id: 'b3', image: 'assets/games/banner3.png' },
+      ];
     }
     heroEl.style.display = '';
     heroEl.querySelectorAll('.hero-slide').forEach(n => n.remove());

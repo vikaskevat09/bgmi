@@ -109,8 +109,7 @@
   // If the admin uploaded a brand logo, show it in the header (and footer) in
   // place of the default SVG mark.
   function renderSiteLogo() {
-    const logo = window.SiteConfig && window.SiteConfig.siteLogo;
-    if (!logo) return;
+    const logo = (window.SiteConfig && window.SiteConfig.siteLogo) || 'assets/brand/brandlogo.png';
     const url = window.assetUrl ? window.assetUrl(logo) : logo;
     document.querySelectorAll('.brand .brand-mark').forEach(mark => {
       mark.innerHTML = `<img src="${url}" alt="logo" />`;
